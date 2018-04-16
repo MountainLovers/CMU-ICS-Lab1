@@ -181,7 +181,7 @@ int bitXor(int x, int y) {
  *   Rating: 1
  */
 int minusOne(void) {
-  return 2;
+  return ~0;
 }
 /* 
  * leastBitPos - return a mask that marks the position of the
@@ -192,7 +192,7 @@ int minusOne(void) {
  *   Rating: 2 
  */
 int leastBitPos(int x) {
-  return 2;
+  return (~x+1)&x;
 }
 /* 
  * allEvenBits - return 1 if all even-numbered bits in word set to 1
@@ -202,7 +202,11 @@ int leastBitPos(int x) {
  *   Rating: 2
  */
 int allEvenBits(int x) {
-  return 2;
+  x = x & (x >> 16);
+  x = x & (x >> 8);
+  x = x & (x >> 4);
+  x = x & (x >> 2);
+  return (x & 0x01);
 }
 /* 
  * byteSwap - swaps the nth byte and the mth byte
