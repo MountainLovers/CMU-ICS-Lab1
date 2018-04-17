@@ -218,7 +218,11 @@ int allEvenBits(int x) {
  *  Rating: 2
  */
 int byteSwap(int x, int n, int m) {
-    return 2;
+  int t1 = (x >> (n << 3)) & 0xFF;
+  int t2 = (x >> (m << 3)) & 0xFF;
+  x = (x & (~(0xFF << (m << 3)))) | (t1 << (m << 3));
+  x = (x & (~(0xFF << (n << 3)))) | (t2 << (n << 3));  
+  return x;
 }
 /* 
  * isAsciiDigit - return 1 if 0x30 <= x <= 0x39 (ASCII codes for characters '0' to '9')
@@ -230,7 +234,9 @@ int byteSwap(int x, int n, int m) {
  *   Rating: 3
  */
 int isAsciiDigit(int x) {
-  return 2;
+  int t1 = (x + (~0x30 + 1)) >> 31;
+  int t2 = (0x39 + (~x + 1)) >> 31;
+  return (t1 | t2) + 1;
 }
 /*
  * satMul2 - multiplies by 2, saturating to Tmin or Tmax if overflow
@@ -242,7 +248,11 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int satMul2(int x) {
-  return 2;
+  int t1 = x >> 31;
+  x = x << 1;
+  int t2 = x >> 31;
+  int t = t1 ^ t2;
+  return (x & (~t)) + ((t << 31) ^ ((~t1) & t));
 }
 /* 
  * subOK - Determine if can compute x-y without overflow
@@ -253,7 +263,11 @@ int satMul2(int x) {
  *   Rating: 3
  */
 int subOK(int x, int y) {
-  return 2;
+  int t1 = x >> 31;
+  int t2 = y >> 31;
+  int t = t1 ^ t2;
+  int cf = (x + (~y + 1)) >> 31;
+  return (t & (t1 ^ cf)) + 1;
 }
 /* 
  * isLess - if x < y  then return 1, else return 0 
@@ -263,7 +277,10 @@ int subOK(int x, int y) {
  *   Rating: 3
  */
 int isLess(int x, int y) {
-  return 2;
+  int t1 = x >> 31;
+  int t2 = y >> 31;
+  int t = (x + (~y + 1)) >> 31;
+  return (~(~(t1 ^ t2) & t) + 1) | (~(t1 & ~t2) + 1);
 }
 /* 
  * bitMask - Generate a mask consisting of all 1's 
@@ -276,7 +293,10 @@ int isLess(int x, int y) {
  *   Rating: 3
  */
 int bitMask(int highbit, int lowbit) {
-  return 2;
+  int x = ~0;
+  x = x & (~0 << lowbit);
+  x = x & ~((~0 << highbit) << 1);
+  return x;
 }
 /*
  * leftBitCount - returns count of number of consective 1's in
