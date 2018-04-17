@@ -248,11 +248,8 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int satMul2(int x) {
-  int t1 = x >> 31;
-  x = x << 1;
-  int t2 = x >> 31;
-  int t = t1 ^ t2;
-  return (x & (~t)) + ((t << 31) ^ ((~t1) & t));
+  int xx = x << 1;
+  return (xx & (~((x >> 31) ^ (xx >> 31)))) + ((((x >> 31) ^ (xx >> 31)) << 31) ^ ((~(x >> 31)) & ((x >> 31) ^ (xx >> 31))));
 }
 /* 
  * subOK - Determine if can compute x-y without overflow
@@ -307,7 +304,33 @@ int bitMask(int highbit, int lowbit) {
  *   Rating: 4
  */
 int leftBitCount(int x) {
-  return 2;
+  int t = x;
+  int ans = 0;
+  int tans = 0;
+  
+  tans = !(~(t >> 16)) << 4;
+  ans = ans + tans;
+  t = t << tans;
+
+  tans = !(~(t >> 24)) << 3;
+  ans = ans + tans;
+  t = t << tans;
+
+  tans = !(~(t >> 28)) << 2;
+  ans = ans + tans;
+  t = t << tans;
+
+  tans = !(~(t >> 30)) << 1;
+  ans = ans + tans;
+  t = t << tans;
+  
+  tans = !(~(t >> 31));
+  ans = ans + tans;
+  t = t << tans;
+
+  ans = ans + (~(t >> 31) + 1); 
+  
+  return ans;
 }
 /* 
  * logicalNeg - implement the ! operator, using all of 
