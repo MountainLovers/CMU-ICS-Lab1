@@ -341,7 +341,12 @@ int leftBitCount(int x) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-  return 2;
+  x = x | (x << 16);
+  x = x | (x << 8);
+  x = x | (x << 4);
+  x = x | (x << 2);
+  x = x | (x << 1);
+  return (x >> 31) + 1;
 }
 /* 
  * float_abs - Return bit-level equivalent of absolute value of f for
@@ -355,7 +360,10 @@ int logicalNeg(int x) {
  *   Rating: 2
  */
 unsigned float_abs(unsigned uf) {
-  return 2;
+  int iuf = uf;
+  int n = ~(0x80 << 16) + 1;
+  if (iuf <= n) uf = uf ^ (1 << 31);
+  return uf;
 }
 /* 
  * float_f2i - Return bit-level equivalent of expression (int) f
