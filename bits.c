@@ -412,8 +412,8 @@ unsigned float_half(unsigned uf) {
   int sign = uf >> 31;
   int expo = (uf & (0x7FFFFFFF)) >> 23;
   int monti = uf & (0x007FFFFF);
-  if (expo == 255 && monti != 0) return uf;
-  if (expo >= 127) {expo = expo - 1; re = (sign << 31) | (expo << 23) | monti;}
+  if (expo == 255) return uf;
+  if (expo >= 126) {expo = expo - 1; re = (sign << 31) | (expo << 23) | monti;}
   else {
     if (((monti & 1) == 1) && (((monti & 2) >> 1) == 1)) add = 1;
     re = ((sign << 31) | (expo << 22) | (monti >> 1)) + add;
