@@ -658,11 +658,11 @@ int main()
 
 输出
 
-![数](E:\Computer Organization Programming Assignment\LAB\数.PNG)
+![数](https://github.com/MountainLovers/CMU-ICS-Lab1/raw/master/pic/数.PNG)
 
 ​	
 
-![](E:\Computer Organization Programming Assignment\LAB\数图.png)
+![](https://github.com/MountainLovers/CMU-ICS-Lab1/raw/master/pic/数图.png)
 
 |      |              | 左HEX      | 左Float          | 右HEX      | 右Float          |
 | ---- | ------------ | ---------- | ---------------- | ---------- | ---------------- |
