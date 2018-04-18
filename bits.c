@@ -378,7 +378,22 @@ unsigned float_abs(unsigned uf) {
  *   Rating: 4
  */
 int float_f2i(unsigned uf) {
-  return 2;
+  int re = 0;
+  int sign = uf >> 31;
+  int expo = (uf & ~(1 << 31)) >> 23;
+  uf = uf & ~(1 << 31);
+  if (uf == 0) return 0;
+  if (expo >= 0 && expo < 255) {
+    expo = expo - 127;
+    if (expo < 0) return 0;
+    if (expo >= 31) {re = 1 << 31; return re;}
+    uf = ((uf >> (23 - expo)) & ~(0xFF << expo)) | (1 << expo);
+    re = uf;
+    if (sign) re = 0 - re;
+    return re;
+  }
+  re = 1 << 31;
+  return re;
 }
 /* 
  * float_half - Return bit-level equivalent of expression 0.5*f for
@@ -392,5 +407,13 @@ int float_f2i(unsigned uf) {
  *   Rating: 4
  */
 unsigned float_half(unsigned uf) {
-  return 2;
+  unsigned re = 0;
+  int sign = uf >> 31;
+  int expo = (uf & ~(1 << 31)) >> 23;
+  int monti = uf & ~((1 << 31) >> 8);
+  if (expo == 255 && monti != 0) return uf;
+  if (expo > 127) expo = expo - 1;
+  else monti = monti >> 1;
+  re = (sign << 31) | (expo << 23) | monti;
+  return re;
 }
